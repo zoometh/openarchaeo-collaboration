@@ -63,13 +63,13 @@ oarch_graph |>
 tbl_graph(nodes_repos_users(oarch_graph),
           edges_user_to_repo(oarch_graph),
           directed = FALSE) |>
-          mutate(
-            degree = centrality_degree(),
-            betweenness = centrality_betweenness(),
-            subgraph = as_factor(group_components()),
-            cluster = as_factor(group_edge_betweenness())
-            ) ->
-            oarch_graph_repo_user
+  mutate(
+    degree = centrality_degree(),
+    betweenness = centrality_betweenness(),
+    subgraph = as_factor(group_components()),
+    cluster = as_factor(group_edge_betweenness())
+  ) ->
+  oarch_graph_repo_user
 
 # Repo-repo
 tbl_graph(nodes_repos(oarch_graph),
@@ -157,6 +157,13 @@ g_repo_user <- oarch_graph_repo_user |>
         legend.position = "bottom")
 
 if(knitr::is_html_output()) girafe(ggobj = g_repo_user) else g_repo_user
+
+# export to HTML
+export_as_html <- TRUE
+if(export_as_html){
+  g_html <- girafe(ggobj = g_repo_user)
+  htmlwidgets::saveWidget(g_html,  here("analysis/data/derived_data/oarch_repo_user.html"), selfcontained = TRUE)
+}
 ```
 
 ```{r fig-graph-repo-repo}
